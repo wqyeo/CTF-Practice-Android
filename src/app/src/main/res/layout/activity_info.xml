@@ -32,43 +32,4 @@
         android:onClick="openURL"
         tools:ignore="HardcodedText" />
 
-    <TextView
-        android:id="@+id/keyCode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="KEY: Derpee"
-        android:textSize="16sp"
-        android:textStyle="italic"
-        android:layout_below="@id/textViewSubtitle"
-        android:layout_centerHorizontal="false"
-        android:layout_marginTop="32dp"
-        android:layout_marginStart="42dp"
-        tools:ignore="HardcodedText" />
-
-    <TextView
-        android:id="@+id/valueCode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="VAL: CODE HERE LATER..."
-        android:textSize="16sp"
-        android:textStyle="italic"
-        android:layout_below="@id/keyCode"
-        android:layout_centerHorizontal="false"
-        android:layout_marginTop="14dp"
-        android:layout_marginStart="42dp"
-        tools:ignore="HardcodedText" />
-
-    <TextView
-        android:id="@+id/hintCode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hint: Same encryption/decryption as app..."
-        android:textSize="12sp"
-        android:textStyle="italic"
-        android:layout_below="@id/keyCode"
-        android:layout_centerHorizontal="false"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="42dp"/>
-
-
 </RelativeLayout>
