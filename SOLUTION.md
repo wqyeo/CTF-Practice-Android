@@ -70,7 +70,10 @@ There are ~3 possible solutions for this, all of which involves recompiling the 
 - Overriding the validation logic.
 - Overriding the password fetching logic.
 
-> There are defintely more than 3, but those are out of the scope...
+> There are defintely more than 3, but those are out of the scope; The relatively simple solutions to achieve involves:<br>
+>
+> - Using a Hook (With [frida](https://frida.re/))
+> - Decompiling the code, injecting your own custom code, and repackaging it. (In my _personal opinion_, this is easiest for me, but the choice is yours)
 
 ## My Solution (Decompile into Smali, inject `Log.d`, Recompile)
 
