@@ -12,6 +12,32 @@ In writing of this solution, I am using these set of tools:
 Additionally, I am using `Arch Linux`, with Kernel Version `6.8.2`<br>
 Most of these tools seem to work the same as it would on Windows, but if there are any differences, you may submit a PR/Issue on this repository to suggest additions onto this document...
 
+# Question 1
+
+After giving the application a try *(Hopefully you did, in an emulator)*, decompile the code with JADX.
+
+> Usually, the core codebase of the application is at `com.<company_name>.<app_name>`, in this case, its `com.example.practiceCTF`.
+
+After exploring around the codebase, you may notice that `LoginActivity` has this going on:
+
+- The encrypted username is in plaintext.
+- The key to the encrypted is in plaintext
+- The username is decrypted during runtime, during `authenticate` function.
+- **There is a `Log.d` statement, logging the actual, decrypted username against the input username**
+
+With that last point, simply connect to the logcat of your emulator to find for the username,<br>In my case, I am using `adb` to connect to my GenyMotion emulator...
+
+```sh
+# Add `| grep USERNAME_COMPARISON` to show only logs that contain `USERNAME_COMPARISON` in it's line.
+adb logcat | grep USERNAME_COMPARISON
+```
+
+Attempt to login, you should see the actual username as so:
+
+```sh
+USERNAME_COMPARISON: Comparing YOUR_INPUT against Ivan
+```
+
 # Question 2
 
 From the JADX Decompiled code, you may have noticed that the actual password is fetched as its being authenticated:
@@ -61,106 +87,27 @@ Secondly, using your favourite text editor, find the code for authentication log
     .locals 5
 
     .line 68
-    iget-object v0, p0, Lcom/example/practiceCTF/LoginActivity;->ENCRYPTED_USERNAME:Ljava/lang/String;
+    # ....
 
-    iget-object v1, p0, Lcom/example/practiceCTF/LoginActivity;->USERNAME_KEY:Ljava/lang/String;
-
-    invoke-static {v0, v1}, Lcom/example/practiceCTF/AESEncryption;->decrypt(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-
-    move-result-object v0
-
-    const/4 v1, 0x0
-
-    const/4 v2, 0x1
-
-    if-nez v0, :cond_0
-
-    .line 70
-    const-string p1, "Failed to decrypt username!\nEnsure your emulator is running on Android 8.0 for this CTF!!!"
-
-    invoke-static {p0, p1, v2}, Landroid/widget/Toast;->makeText(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;
-
-    move-result-object p1
-
-    invoke-virtual {p1}, Landroid/widget/Toast;->show()V
-
-    return v1
-
-    .line 74
-    :cond_0
-    new-instance v3, Ljava/lang/StringBuilder;
-
-    const-string v4, "Comparing "
-
-    invoke-direct {v3, v4}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
-
-    invoke-virtual {v3, p1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v3
-
-    const-string v4, " against "
-
-    invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v3
-
-    invoke-virtual {v3, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v3
-
-    invoke-virtual {v3}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-
-    move-result-object v3
-
-    const-string v4, "USERNAME_COMPARISON"
-
-    invoke-static {v4, v3}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
-
-    .line 76
-    iget-object v3, p0, Lcom/example/practiceCTF/LoginActivity;->passwordFetcher:Lcom/example/practiceCTF/PasswordFetcher;
-
-    invoke-virtual {v3}, Lcom/example/practiceCTF/PasswordFetcher;->getPassword()Ljava/lang/String;
-
-    move-result-object v3
-
-    .line 77
-    invoke-virtual {p1}, Ljava/lang/String;->trim()Ljava/lang/String;
-
-    move-result-object p1
-
-    invoke-virtual {v0, p1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
-
-    move-result p1
-
-    if-eqz p1, :cond_1
-
-    invoke-virtual {p2}, Ljava/lang/String;->trim()Ljava/lang/String;
-
-    move-result-object p1
-
-    invoke-virtual {v3, p1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
-
-    move-result p1
-
-    if-eqz p1, :cond_1
-
-    move v1, v2
-
-    :cond_1
-    return v1
+    # ...
 .end method
 ```
 
 Thirdly, look for the chunk where the password is fetched. In my case it was obvious as the function identity stayed the same after decompilation:
 
 ```smali
-.line 76
-
-iget-object v3, p0, Lcom/example/practiceCTF/LoginActivity;->passwordFetcher:Lcom/example/practiceCTF/PasswordFetcher;
-
-invoke-virtual {v3}, Lcom/example/practiceCTF/PasswordFetcher;->getPassword()Ljava/lang/String;
-
-move-result-object v3
+.method private authenticate(Ljava/lang/String;Ljava/lang/String;)Z
+    .locals 5
+    # ...
+    .line 76
+    
+    iget-object v3, p0, Lcom/example/practiceCTF/LoginActivity;->passwordFetcher:Lcom/example/practiceCTF/PasswordFetcher;
+    
+    invoke-virtual {v3}, Lcom/example/practiceCTF/PasswordFetcher;->getPassword()Ljava/lang/String;
+    
+    move-result-object v3
+    # ...
+.end method
 ```
 
 At the end of the this chunk of code, `v3` should be the result of the actual password.
@@ -175,21 +122,27 @@ invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/Strin
 In my case, I re-used `v4` as the tag, and placed `v3` (actual password) as the message.
 
 > If you do want to create a new variable for the tag instead, do `const-string v5, "YOUR_TAG"`, and change `.local 5` to `.local 6` at the start of the function<br>
-> (`.local` is used to indicate how many local variables exists in the function...)
+> _(`.local` is used to indicate how many local variables exists in the function...)_
 
 ```smali
-.line 76
+.method private authenticate(Ljava/lang/String;Ljava/lang/String;)Z
+    .locals 5
+    # ...
+    .line 76
 
-iget-object v3, p0, Lcom/example/practiceCTF/LoginActivity;->passwordFetcher:Lcom/example/practiceCTF/PasswordFetcher;
+    iget-object v3, p0, Lcom/example/practiceCTF/LoginActivity;->passwordFetcher:Lcom/example/practiceCTF/PasswordFetcher;
+    
+    invoke-virtual {v3}, Lcom/example/practiceCTF/PasswordFetcher;->getPassword()Ljava/lang/String;
+    
+    move-result-object v3
 
-invoke-virtual {v3}, Lcom/example/practiceCTF/PasswordFetcher;->getPassword()Ljava/lang/String;
-
-move-result-object v3
-
-invoke-static {v4, v3}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    # Inject, after results have been moved into `v3`...
+    invoke-static {v4, v3}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    # ...
+.end method
 ```
 
-> Another place where u can inject the logging, is at the `PasswordFetcher class, you may attempt it if you want to...
+> Another place where u can inject the logging, is at the `PasswordFetcher` class, you may attempt it if you want to...
 
 Fourth, recompile the edited code:
 
@@ -260,4 +213,4 @@ The actual implementation of fetching password is as follows:
 
 The Activity/Screen creates a custom randomizer with a random key.<br>The key is used as a seed for the randomizer. The randomizer 'resets' itself with the seed after every 5 password generation...
 
-> See <https://en.wikipedia.org/wiki/Random_number_generator_attack>
+> Also, somewhat releated... <https://en.wikipedia.org/wiki/Random_number_generator_attack>
