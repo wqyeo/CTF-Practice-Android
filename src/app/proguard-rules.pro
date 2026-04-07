@@ -16,6 +16,24 @@
 # debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable
 
+-keep class com.example.practiceCTF.LoginActivity {
+}
+
+-keepclassmembers class com.example.practiceCTF.LoginActivity {
+   private authenticate(java.lang.String, java.lang.String);
+}
+
+-keep,allowobfuscation class com.example.practiceCTF.UsernameFetcher {
+    public *;
+    private *;
+}
+
+-keep,allowobfuscation class com.example.practiceCTF.PasswordFetcher {
+    public *;
+    private *;
+}
+
+
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile

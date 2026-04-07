@@ -13,17 +13,16 @@
         android:theme="@style/Theme.PracticeCTF"
         tools:targetApi="31">
         <activity
-            android:name=".HomeActivity"
+            android:name=".WinActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light"/>
-        <activity
-            android:name=".InfoActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light"/>
+            android:theme="@style/Theme.AppCompat.Light" />
         <activity
             android:name=".LoginActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light" />
+        <activity
+            android:name=".HomeActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

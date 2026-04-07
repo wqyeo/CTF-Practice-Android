@@ -1,31 +1,28 @@
-package com.example.practiceCTF;
+package com.example.practiceCTF
 
-import java.util.Random;
+import kotlin.random.Random
 
-public class PasswordFetcher {
-    private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIGKLMN01234567890";
+class PasswordFetcher(key: Int) {
+    private var random: Random
+    private val originKey: Int
 
-    private Random random;
-    private final int originKey;
-    private int cycleCount;
-
-    public PasswordFetcher(int key) {
-        random = new Random(key);
-        cycleCount = 0;
-        originKey = key;
+    init {
+        random = Random(key)
+        originKey = key
     }
 
-    public String getPassword() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 5; i++) {
-            char randomChar = ALPHABET.charAt(random.nextInt(ALPHABET.length()));
-            sb.append(randomChar);
+    val password: String
+        get() {
+            val sb = StringBuilder()
+            for (i in 0..12) {
+                val randomChar = ALPHABET[random.nextInt(ALPHABET.length)]
+                sb.append(randomChar)
+            }
+            random = Random(originKey)
+            return sb.toString()
         }
-        cycleCount++;
-        if (cycleCount == 5) {
-            random = new Random(originKey);
-            cycleCount = 0;
-        }
-        return sb.toString();
+
+    companion object {
+        private const val ALPHABET = "abcdefghijklmnopqrstuvwxyz1234567890"
     }
 }
