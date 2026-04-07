@@ -19,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -29,10 +28,10 @@ import com.example.practiceCTF.ui.theme.PracticeCTFTheme
 @Suppress("unused")
 object ComposeUiBridge {
     @JvmStatic
-    fun setHomeContent(activity: AppCompatActivity, onLoginClick: Runnable) {
+    fun setHomeContent(activity: AppCompatActivity, onGitlabClick: Runnable, onLoginClick: Runnable) {
         activity.setContent {
             PracticeCTFTheme(dynamicColor = false) {
-                HomeScreen(onLoginClick = onLoginClick)
+                HomeScreen(onGitlabClick = onGitlabClick, onLoginClick = onLoginClick)
             }
         }
     }
@@ -66,8 +65,7 @@ object ComposeUiBridge {
 }
 
 @Composable
-private fun HomeScreen(onLoginClick: Runnable) {
-    val uriHandler = LocalUriHandler.current
+private fun HomeScreen(onGitlabClick: Runnable, onLoginClick: Runnable) {
     val gitlabUrl = stringResource(id = R.string.https_gitlab_com_wqyeo_ctf_practice_android)
 
     Column(
@@ -87,7 +85,7 @@ private fun HomeScreen(onLoginClick: Runnable) {
             textDecoration = TextDecoration.Underline,
             modifier = Modifier
                 .padding(top = 16.dp)
-                .clickable { uriHandler.openUri(gitlabUrl) }
+                .clickable { onGitlabClick.run() }
         )
         Button(
             onClick = { onLoginClick.run() },
