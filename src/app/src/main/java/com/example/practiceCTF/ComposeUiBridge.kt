@@ -62,6 +62,15 @@ object ComposeUiBridge {
             }
         }
     }
+
+    @JvmStatic
+    fun setHiddenContent(activity: AppCompatActivity) {
+        activity.setContent {
+            PracticeCTFTheme(dynamicColor = false) {
+                HiddenScreen()
+            }
+        }
+    }
 }
 
 @Composable
@@ -171,6 +180,22 @@ private fun WinScreen(onBackToHomeClick: Runnable) {
         ) {
             Text(text = stringResource(id = R.string.back_to_home))
         }
+    }
+}
+
+@Composable
+private fun HiddenScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "You found the secret!",
+            style = MaterialTheme.typography.headlineMedium
+        )
     }
 }
 

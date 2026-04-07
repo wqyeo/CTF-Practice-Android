@@ -13,6 +13,10 @@
         android:theme="@style/Theme.PracticeCTF"
         tools:targetApi="31">
         <activity
+            android:name=".HiddenActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light" />
+        <activity
             android:name=".WinActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light" />

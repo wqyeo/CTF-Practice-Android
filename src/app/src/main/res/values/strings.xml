@@ -9,4 +9,5 @@
     <string name="authenticate">Authenticate</string>
     <string name="back_to_home">Back To Home</string>
     <string name="successfully_logged_in">Successfully Logged In!</string>
+    <string name="hidden_secret_message">You found the secret!</string>
 </resources>
