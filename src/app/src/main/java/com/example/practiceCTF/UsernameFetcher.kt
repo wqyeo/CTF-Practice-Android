@@ -11,6 +11,9 @@ import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
 
+/**
+ * AES Encrypted Username.
+ */
 class UsernameFetcher {
 
     private val ENCRYPTED_USERNAME: String = "oaryGaWV4Fe8YQzd9w6jKJxK5WA="

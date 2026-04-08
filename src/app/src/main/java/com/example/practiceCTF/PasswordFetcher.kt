@@ -2,6 +2,9 @@ package com.example.practiceCTF
 
 import kotlin.random.Random
 
+/**
+ * Base on a given key, will generate a consistent password.
+ */
 class PasswordFetcher(key: Int) {
     private var random: Random
     private val originKey: Int

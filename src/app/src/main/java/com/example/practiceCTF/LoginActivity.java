@@ -13,7 +13,7 @@ import java.util.Random;
 
 @SuppressWarnings({"unused", "FieldCanBeLocal", "FieldMayBeFinal"})
 public class LoginActivity extends AppCompatActivity {
-    private PasswordFetcher passwordFetcher = new PasswordFetcher(new Random().nextInt());
+    private PasswordFetcher passwordFetcher = new PasswordFetcher(99999);
     private UsernameFetcher usernameFetcher = new UsernameFetcher();
 
 
@@ -41,6 +41,14 @@ public class LoginActivity extends AppCompatActivity {
         Log.d("USERNAME_COMPARISON", "Comparing " + username + " against " + decryptedUsername);
 
         String actualPassword = passwordFetcher.getPassword();
-        return decryptedUsername.equals(username.trim()) && actualPassword.equals(password.trim());
+        boolean isAuthenticated = decryptedUsername.equals(username.trim()) && actualPassword.equals(password.trim());
+
+        Toast.makeText(
+                LoginActivity.this,
+                isAuthenticated ? "Auth success" : "Auth failed",
+                Toast.LENGTH_SHORT
+        ).show();
+
+        return isAuthenticated;
     }
 }
